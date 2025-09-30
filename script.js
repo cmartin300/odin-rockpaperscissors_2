@@ -1,44 +1,73 @@
 console.log("Rock, Paper, Scissors!");
 
-// get computer choice
-let rng = Math.floor(Math.random() * 3);
-let computerChoice =
-  rng === 0 ? "Rock" : rng === 1 ? "Paper" : rng === 2 ? "Scissors" : "Err";
+let userScore = 0;
+let computerScore = 0;
+let roundLimit = 5;
 
-if (computerChoice === "Err") {
-  console.log(`Error in computer choice. rng = ${rng}`);
-}
+playGame(roundLimit);
 
-// prompt for user choice
-let userSelection = prompt(
-  "Choose: Rock {R}, Paper{P}, or Scissors{S}: "
-).toUpperCase();
+function playGame(roundLimit) {
+  for (let i = 0; i < roundLimit; i++) {
+    const computerChoice = getComputerChoice();
+    const userChoice = getUserChoice();
 
-let userChoice =
-  userSelection === "R"
-    ? "Rock"
-    : userSelection === "P"
-    ? "Paper"
-    : userSelection === "S"
-    ? "Scissors"
-    : "Err";
-
-if (userChoice === "Err") {
+    playRound(computerChoice, userChoice);
+  }
   console.log(
-    `Error in user choice: userSelection is ${userSelection}. Needs to be R, P, or S!`
+    `The game is over!\nComputer has ${computerScore} win(s) and you have ${userScore} win(s).`
   );
 }
 
-// check win condition
-console.log(`Computer chose: ${computerChoice}.\nYou chose: ${userChoice}.`);
-if (computerChoice === userChoice) {
-  console.log("It's a draw!");
-} else if (
-  (computerChoice === "Rock" && userChoice === "Scissors") ||
-  (computerChoice === "Paper" && userChoice === "Rock") ||
-  (computerChoice === "Scissors" && userChoice === "Paper")
-) {
-  console.log("Computer Wins!");
-} else {
-  console.log("You win!");
+function playRound(computerChoice, userChoice) {
+  console.log(`Computer chose: ${computerChoice}.\nYou chose: ${userChoice}.`);
+  if (computerChoice === userChoice) {
+    console.log("It's a draw!");
+  } else if (
+    (computerChoice === "Rock" && userChoice === "Scissors") ||
+    (computerChoice === "Paper" && userChoice === "Rock") ||
+    (computerChoice === "Scissors" && userChoice === "Paper")
+  ) {
+    computerScore += 1;
+    console.log("Computer Wins!");
+  } else {
+    userScore += 1;
+    console.log("You win!");
+  }
+}
+
+function getComputerChoice() {
+  let rng = Math.floor(Math.random() * 3);
+  let computerChoice =
+    rng === 0 ? "Rock" : rng === 1 ? "Paper" : rng === 2 ? "Scissors" : "Err";
+
+  if (computerChoice === "Err") {
+    console.log(`Error in computer choice. rng = ${rng}`);
+  }
+  //   throw new Error(`Error in computer choice. rng = ${rng}`);
+  return computerChoice;
+}
+
+function getUserChoice() {
+  let userSelection = prompt(
+    "Choose: Rock{R}, Paper{P}, or Scissors{S}: "
+  ).toUpperCase();
+
+  let userChoice =
+    userSelection === "R"
+      ? "Rock"
+      : userSelection === "P"
+      ? "Paper"
+      : userSelection === "S"
+      ? "Scissors"
+      : "Err";
+
+  if (userChoice === "Err") {
+    console.log(
+      `Error in user choice: userSelection is ${userSelection}. Needs to be R, P, or S!`
+    );
+    // throw new Error(
+    //   `Error in user choice: userSelection is ${userSelection}. Needs to be R, P, or S!`
+    // );
+  }
+  return userChoice;
 }
