@@ -1,38 +1,70 @@
-console.log("Rock, Paper, Scissors!");
+const buttons = document.querySelector(".buttons");
+const choices = document.querySelector(".choices");
+const results = document.querySelector(".results");
+const errors = document.querySelector("errors");
+const computerScoreText = document.querySelector(".computer-score");
+const playerScoreText = document.querySelector(".player-score");
+const gameOverText = document.querySelector(".game-over");
+
+buttons.addEventListener("click", (e) => {
+  const computerChoice = getComputerChoice();
+
+  switch (e.target.id) {
+    case "rock":
+      playRound(computerChoice, "Rock");
+      break;
+    case "paper":
+      playRound(computerChoice, "Paper");
+      break;
+    case "scissors":
+      playRound(computerChoice, "Scissors");
+      break;
+  }
+});
 
 let userScore = 0;
 let computerScore = 0;
 let roundLimit = 5;
 
-playGame(roundLimit);
-
-function playGame(roundLimit) {
-  for (let i = 0; i < roundLimit; i++) {
-    const computerChoice = getComputerChoice();
-    const userChoice = getUserChoice();
-
-    playRound(computerChoice, userChoice);
-  }
-  console.log(
-    `The game is over!\nComputer has ${computerScore} win(s) and you have ${userScore} win(s).`
-  );
-}
-
 function playRound(computerChoice, userChoice) {
-  console.log(`Computer chose: ${computerChoice}.\nYou chose: ${userChoice}.`);
+  choices.textContent = `Computer chose: ${computerChoice}.\nYou chose: ${userChoice}.`;
   if (computerChoice === userChoice) {
-    console.log("It's a draw!");
+    results.textContent = "It's a draw!";
   } else if (
     (computerChoice === "Rock" && userChoice === "Scissors") ||
     (computerChoice === "Paper" && userChoice === "Rock") ||
     (computerChoice === "Scissors" && userChoice === "Paper")
   ) {
     computerScore += 1;
-    console.log("Computer Wins!");
+    results.textContent = "Computer Wins!";
+    computerScoreText.textContent = `Computer Score: ${computerScore}`;
   } else {
     userScore += 1;
-    console.log("You win!");
+    results.textContent = "You win!";
+    playerScoreText.textContent = `Player Score: ${userScore}`;
   }
+
+  checkGameOver();
+}
+
+function checkGameOver() {
+  if (userScore >= 5) {
+    gameOverText.textContent = "Game Over! You win!";
+    gameOver();
+  } else if (computerScore >= 5) {
+    gameOverText.textContent = "Game Over! Computer wins!";
+    gameOver();
+  } else {
+    gameOverText.textContent = "";
+  }
+}
+
+function gameOver() {
+  userScore = 0;
+  computerScore = 0;
+
+  computerScoreText.textContent = `Computer Score: ${computerScore}`;
+  playerScoreText.textContent = `Player Score: ${userScore}`;
 }
 
 function getComputerChoice() {
@@ -41,33 +73,7 @@ function getComputerChoice() {
     rng === 0 ? "Rock" : rng === 1 ? "Paper" : rng === 2 ? "Scissors" : "Err";
 
   if (computerChoice === "Err") {
-    console.log(`Error in computer choice. rng = ${rng}`);
+    errors.textContent = `Error in computer choice. rng = ${rng}`;
   }
-  //   throw new Error(`Error in computer choice. rng = ${rng}`);
   return computerChoice;
-}
-
-function getUserChoice() {
-  let userSelection = prompt(
-    "Choose: Rock{R}, Paper{P}, or Scissors{S}: "
-  ).toUpperCase();
-
-  let userChoice =
-    userSelection === "R"
-      ? "Rock"
-      : userSelection === "P"
-      ? "Paper"
-      : userSelection === "S"
-      ? "Scissors"
-      : "Err";
-
-  if (userChoice === "Err") {
-    console.log(
-      `Error in user choice: userSelection is ${userSelection}. Needs to be R, P, or S!`
-    );
-    // throw new Error(
-    //   `Error in user choice: userSelection is ${userSelection}. Needs to be R, P, or S!`
-    // );
-  }
-  return userChoice;
 }
